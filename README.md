@@ -1,5 +1,5 @@
 # moving-object-node-js
-This task was given to me. A Node.js console app that simulates a moving object in a matrix. 
+This task was given to me. It is a Node.js console app that simulates a moving object in a matrix. 
 
 ## The Task
 The task is to accept a set of commands and then simulate whether an object can move according to these commands without falling off the table it stands on. The table can be seen as a matrix where the object will have an x and y position as drawn below. The object always occupies exactly one cell and can be seen as a point without mass. Origo is at the top left.

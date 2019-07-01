@@ -1,11 +1,10 @@
-/*
+/**
 *app.js
 *
 *This is the main file and the first file to run. It is a state machine which uses classes MovingObject and
 * Matrix to simulate an object in motion on a rectangular field.
 *
-* Created by: Björn Berggren
-*
+* @author: Björn Berggren
  */
 
  //console.log(convertEndian(0xDAFA));
@@ -38,12 +37,12 @@ var theState = states.STATE1;
 const messages = {
 
     MSG_SIZEPOS:  'Type the size of the matrix and the position of the object: width,height,x,y',
-    MSG_COMMANDS: 'Type simulation commands:\n' +
-                  '0 = quit simulation and the print result to stou\n' +
+    MSG_COMMANDS: 'Type simulation commands, use comma to separate the commands e.g. \'1,3,1,1,0\':\n' +
+                  '0 = quit simulation and the print result\n' +
                   '1 = move forward one step\n'  +
                   '2 = move backwards one step\n'  +
                   '3 = rotate clockwise 90 degrees (eg north to east)\n' +
-                  '4 = rotate counterclockwise 90 degrees (eg west to south)1',
+                  '4 = rotate counterclockwise 90 degrees (eg west to south)',
     MSG_PRESSKEY: 'Press any key and enter to continue..',
     MSG_ERROR:    'Incorrect character or incorrect amount of characters, please try again'
 
@@ -82,15 +81,21 @@ console.log(messages.MSG_SIZEPOS);
 //process.stdin.setEncoding('utf16le');
 //process.stdout.setEncoding('utf16le');
 //This is the main function, it reads the input and has a state machine
-process.stdin.on('data', function (chunk) {
-    rebuilt = chunk;
-    const theBuffer = (Buffer.from(chunk));
+process.stdin.on('data', function (inputUTF8Codes) {
+
+    var userInput8ArrayParsed;
+    // State3 does not use any input from user
+    if(theState != states.STATE3)
+    {
+        // Will get the converted version containing integers, one digit per slot, comma=-1
+        userInput8ArrayParsed = parseUserInput(inputUTF8Codes);
+    }
     // State1: SizePosition state2: Simulation state3: Output
     switch (theState) {
 
         case states.STATE1:
-            if (checkInputState1(theBuffer)) {
-                readInputSizePosition(theBuffer);
+            if (checkInputState1(userInput8ArrayParsed)) {
+                readInputSizePosition(userInput8ArrayParsed);
                 theState = states.STATE2;
                 console.log(messages.MSG_COMMANDS);
             } else {
@@ -98,9 +103,9 @@ process.stdin.on('data', function (chunk) {
             }
             break;
         case states.STATE2:
-            if (checkInputState2(theBuffer)) {
+            if (checkInputState2(userInput8ArrayParsed)) {
                 //Starts simulation and prints the output
-                console.log('Output: [' + runSimulation(parseUserInput(theBuffer)) + ']');
+                console.log('Output: [' + runSimulation(userInput8ArrayParsed) + ']');
                 theState = states.STATE3;
                 console.log(messages.MSG_PRESSKEY);
             } else {
@@ -114,8 +119,6 @@ process.stdin.on('data', function (chunk) {
             break;
         default:
     }
-
-
 });
 
 
@@ -123,18 +126,14 @@ process.stdin.on('end', function () {
     console.log(rebuilt);
 });
 
+/**
+ * Reads and stores the input and size from user, state1
+ * @param {array} userInput8ArrayParsedPar contains the input from user each slot contains one digit comma is represented by -1
+ */
 
+function readInputSizePosition(userInput8ArrayParsedPar) {
 
-
-//Reads the input and size from user, state1
-function readInputSizePosition(theBuffer) {
-
-    // converted version of the input one digit per slot, comma=-1
-    var convertedInput8Array = new Int8Array(theBuffer);
-
-    // Parses the user input
-    convertedInput8Array = parseUserInput(theBuffer);
-
+    var userInput8ArrayParsed = userInput8ArrayParsedPar;
 
     var userInput16 = new Uint16Array(1);
     var theArrayBuffer = new ArrayBuffer(16);
@@ -148,10 +147,10 @@ function readInputSizePosition(theBuffer) {
     var userInt16Index = 0;
     var exp = 0;
 
-    for (var i = 0; i < convertedInput8Array.length; i++) {
+    for (var i = 0; i < userInput8ArrayParsed.length; i++) {
 
-        if (convertedInput8Array[i] != -1) {
-            userInput16[0] += (convertedInput8Array[i] * Math.pow(10, exp));
+        if (userInput8ArrayParsed[i] != -1) {
+            userInput16[0] += (userInput8ArrayParsed[i] * Math.pow(10, exp));
             exp++;
         } else {
             theDataView.setInt16(currentValue, userInput16[0], true)
@@ -167,13 +166,12 @@ function readInputSizePosition(theBuffer) {
     theMovingObject.position[1] = theDataView.getInt16(0, true);
     theMatrix.size[0] = theDataView.getInt16(6, true);
     theMatrix.size[1] = theDataView.getInt16(4, true);
-
-
-
 }
 
-// Parses the input and converts it from UTF-8 to the integers which they symbolise, comma is repesented as -1.
-function parseUserInput(theBuffer) {
+// Parses the input and converts it from UTF-8 to the integers which they symbolise, comma is represented by -1.
+function parseUserInput(inputUTF8Codes) {
+
+    var theBuffer = (Buffer.from(inputUTF8Codes));
 
     var input8Array = new Uint8Array(theBuffer);
     // will contain the converted version of the input one digit per slot, comma=-1
@@ -232,28 +230,30 @@ function runSimulation(selectedCommands) {
 }
 
 // Checks the input from state1, only 4 integers are allowed and comma
-function checkInputState1(theBuffer) {
+function checkInputState1(userInput8ArrayParsedPar) {
 
-    var input8Array = parseUserInput(theBuffer);
+    var userInput8ArrayParsed = userInput8ArrayParsedPar;
+
+    //userInput8ArrayParsed = parseUserInput(theBuffer);
     var amaountOfNumbers = 0;
     var firstBytecontainsNoneZero = false;
     var secondByteContainsNoneZero = false;
 
-    for (var i = 0; i < input8Array.length; i++) {
-        if (input8Array[i] > 9)
+    for (var i = 0; i < userInput8ArrayParsed.length; i++) {
+        if (userInput8ArrayParsed[i] > 9)
             return false;
-        if (input8Array[i] < (-1))
+        if (userInput8ArrayParsed[i] < (-1))
             return false;
-        if (amaountOfNumbers == 3 && (input8Array[i] > 0)) {
+        if (amaountOfNumbers == 3 && (userInput8ArrayParsed[i] > 0)) {
             firstBytecontainsNoneZero = true;
         }
 
-        if (amaountOfNumbers == 2 && (input8Array[i] > 0)) {
+        if (amaountOfNumbers == 2 && (userInput8ArrayParsed[i] > 0)) {
             secondByteContainsNoneZero = true;
         }
 
 
-        if (input8Array[i] == -1) {
+        if (userInput8ArrayParsed[i] == -1) {
             amaountOfNumbers++;
             if (amaountOfNumbers > 4)
                 return false;
@@ -269,22 +269,28 @@ function checkInputState1(theBuffer) {
 }
 
 // Checks the input from state2, only 0-4 are allowed and comma
-function checkInputState2(theBuffer) {
-    var input8Array = parseUserInput(theBuffer);
-    if (input8Array.length < 2) {
+function checkInputState2(userInput8ArrayParsedPar) {
+    var userInput8ArrayParsed = userInput8ArrayParsedPar;
+    if (userInput8ArrayParsed.length < 2) {
         return false;
     }
 
-    for (var i = 0; i < input8Array.length; i++) {
-        if (input8Array[i] > amountOfCommands)
+    for (var i = 0; i < userInput8ArrayParsed.length; i++) {
+        if (userInput8ArrayParsed[i] > amountOfCommands)
             return false;
-        if (input8Array[i] < (-1))
+        if (userInput8ArrayParsed[i] < (-1))
             return false;
     }
 
     return true;
 }
 
+function test(theInt) {
+
+}
+/*
+* For future use, flips the endian. e.g. from little endia to big endian.
+ */
 function convertEndian(theInt) {
     var temp=0;
     temp = theInt<<8;

@@ -38,9 +38,14 @@ var theState = states.STATE1;
 const messages = {
 
     MSG_SIZEPOS:  'Type the size of the matrix and the position of the object: width,height,x,y',
-    MSG_COMMANDS: 'Type simulation commands',
+    MSG_COMMANDS: 'Type simulation commands:\n' +
+                  '0 = quit simulation and the print result to stou\n' +
+                  '1 = move forward one step\n'  +
+                  '2 = move backwards one step\n'  +
+                  '3 = rotate clockwise 90 degrees (eg north to east)\n' +
+                  '4 = rotate counterclockwise 90 degrees (eg west to south)1',
     MSG_PRESSKEY: 'Press any key and enter to continue..',
-    MSG_ERROR:     'Incorrect character or incorrect amount of characters, please try again'
+    MSG_ERROR:    'Incorrect character or incorrect amount of characters, please try again'
 
 }
 

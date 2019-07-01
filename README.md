@@ -26,3 +26,5 @@ A good code structure should also allow for expanded functionality in the future
 - Handle a different shapes other than a rectangle - Add more commands
 - Change the binary form of the protocol to JSON Timing
 Estimated time to complete this task is around 8 hours.
+
+test

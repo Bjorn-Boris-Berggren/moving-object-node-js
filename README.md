@@ -27,4 +27,3 @@ A good code structure should also allow for expanded functionality in the future
 - Change the binary form of the protocol to JSON Timing
 Estimated time to complete this task is around 8 hours.
 
-test

@@ -57,12 +57,13 @@ const directions = {
     SOUTH:      3,
     WEST:       4
 }
-/*  Simulation execution
-0 = quit simulation and print results to stdout
-1 = move forward one step
-2 = move backwards one step
-3 = rotate clockwise 90 degrees (eg north to east)
-4 = rotate counterclockwise 90 degrees (eg west to south)
+/**
+ * Simulation execution
+* 0 = quit simulation and print results to stdout
+* 1 = move forward one step
+* 2 = move backwards one step
+* 3 = rotate clockwise 90 degrees (eg north to east)
+* 4 = rotate counterclockwise 90 degrees (eg west to south)
 */
 const predefinedCommands = {
 
@@ -73,8 +74,11 @@ const predefinedCommands = {
     COUNTERROTATE:  4
 
 }
-amountOfCommands = 4;
+// Max value for a command
+var commandMaxValue = 4;
 
+// Amount of commands from user input
+var amountInputCommands = 1;
 
 console.log(messages.MSG_SIZEPOS);
 
@@ -83,13 +87,15 @@ console.log(messages.MSG_SIZEPOS);
 //This is the main function, it reads the input and has a state machine
 process.stdin.on('data', function (inputUTF8Codes) {
 
+
     var userInput8ArrayParsed;
     // State3 does not use any input from user
     if(theState != states.STATE3)
     {
         // Will get the converted version containing integers, one digit per slot, comma=-1
-        userInput8ArrayParsed = parseUserInput(inputUTF8Codes);
+        userInput8ArrayParsed = convertUserInputToDigits(inputUTF8Codes);
     }
+
     // State1: SizePosition state2: Simulation state3: Output
     switch (theState) {
 
@@ -128,7 +134,7 @@ process.stdin.on('end', function () {
 
 /**
  * Reads and stores the input and size from user, state1
- * @param {array} userInput8ArrayParsedPar contains the input from user each slot contains one digit comma is represented by -1
+ * @param {Int8Array} userInput8ArrayParsedPar contains the input from user each slot contains one digit comma is represented by -1
  */
 
 function readInputSizePosition(userInput8ArrayParsedPar) {
@@ -168,9 +174,13 @@ function readInputSizePosition(userInput8ArrayParsedPar) {
     theMatrix.size[1] = theDataView.getInt16(4, true);
 }
 
-// Parses the input and converts it from UTF-8 to the integers which they symbolise, comma is represented by -1.
-function parseUserInput(inputUTF8Codes) {
-
+/**
+ * Parses the input and converts it from UTF-8 to the integers which they symbolise, comma is represented by -1.
+ *
+ * @param {Buffer} inputUTF8Codes Contains the user input in UTF-8 code
+ * @returns {Int8Array} Containing the user input in integers, comma is represented by -1.
+ */
+function convertUserInputToDigits(inputUTF8Codes) {
     var theBuffer = (Buffer.from(inputUTF8Codes));
 
     var input8Array = new Uint8Array(theBuffer);
@@ -188,6 +198,7 @@ function parseUserInput(inputUTF8Codes) {
 
         } else {
             commandsOutput8Array[index] = -1;
+            amountInputCommands++;
         }
 
         index--;
@@ -198,19 +209,24 @@ function parseUserInput(inputUTF8Codes) {
 /*
 
 *This function executes the simulation.
-0 = QUIT = quit simulation and print results to stdout
-1 = FORWARD =move forward one step
-2 = BACKWARD = move backwards one step
-3 = ROTATE = rotate clockwise 90 degrees (eg north to east)
-4 = COUNTERROTATE = rotate counterclockwise 90 degrees (eg west to south)
+* 0 = QUIT = quit simulation and print results to stdout
+* 1 = FORWARD =move forward one step
+* 2 = BACKWARD = move backwards one step
+* 3 = ROTATE = rotate clockwise 90 degrees (eg north to east)
+* 4 = COUNTERROTATE = rotate counterclockwise 90 degrees (eg west to south)
+* @param {Int8Array} selectedCommands Contains all the commands from user input.
+* @returns {number[]} Contains the position of the after the simulation
 */
 function runSimulation(selectedCommands) {
 
-
     for (var i = (selectedCommands.length - 1); i >= 0; i--) {
 
-
-        if (selectedCommands[i] == predefinedCommands.FORWARD || selectedCommands[i] == predefinedCommands.BACKWARD) {
+        // Comma==-1
+        if(selectedCommands[i]==-1)
+        {
+            continue;
+        }
+        else if (selectedCommands[i] == predefinedCommands.FORWARD || selectedCommands[i] == predefinedCommands.BACKWARD) {
             theMovingObject.move(selectedCommands[i], predefinedCommands, directions);
             if (theMatrix.validPosition(theMovingObject.position) == -1) {
                 theMovingObject.position[0] = -1;
@@ -234,7 +250,7 @@ function checkInputState1(userInput8ArrayParsedPar) {
 
     var userInput8ArrayParsed = userInput8ArrayParsedPar;
 
-    //userInput8ArrayParsed = parseUserInput(theBuffer);
+    //userInput8ArrayParsed = convertUserInputToDigits(theBuffer);
     var amaountOfNumbers = 0;
     var firstBytecontainsNoneZero = false;
     var secondByteContainsNoneZero = false;
@@ -274,12 +290,28 @@ function checkInputState2(userInput8ArrayParsedPar) {
     if (userInput8ArrayParsed.length < 2) {
         return false;
     }
+    var sum=0;
+    var exp=0;
 
     for (var i = 0; i < userInput8ArrayParsed.length; i++) {
-        if (userInput8ArrayParsed[i] > amountOfCommands)
-            return false;
+        //if (userInput8ArrayParsed[i] > commandMaxValue)
+        //    return false;
         if (userInput8ArrayParsed[i] < (-1))
             return false;
+        if(userInput8ArrayParsed[i] == -1)
+        {
+            sum=0;
+            exp=0;
+        }
+        else
+        {
+            sum += (userInput8ArrayParsed[i] * Math.pow(10, exp));
+            exp++;
+        }
+        if(sum>commandMaxValue)
+        {
+            return false;
+        }
     }
 
     return true;

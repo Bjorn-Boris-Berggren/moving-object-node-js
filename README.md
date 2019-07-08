@@ -10,11 +10,11 @@ After simulation, the app outputs the final position: [x,y]. If the object falls
 The object always has a direction (north, east, south or west). A simulation always starts with direction north. North means that if the object sits on [2, 4] and moves forward one step, the object will now stand on [2, 3].
 
 The commands are:<br />
-0 = quit simulation and the print result to stout<br />
-1 = move forward one step<br />
-2 = move backwards one step<br />
-3 = rotate clockwise 90 degrees (eg north to east)<br />
-4 = rotate counterclockwise 90 degrees (eg west to south)<br />
+0 = Quit simulation and the print result to stout<br />
+1 = Move forward one step<br />
+2 = Move backwards one step<br />
+3 = Rotate clockwise 90 degrees (eg north to east)<br />
+4 = Rotate counterclockwise 90 degrees (eg west to south)<br />
 <br />
 Use comma as separator between commands.
 

@@ -9,8 +9,8 @@ objects or variables are allowed to be used while parsing the input. The input f
 After simulation, the app outputs the final position: [x,y]. If the object falls out of the matrix the app MUST output [-1,-1]. 
 The size of the matrix and the position MUST be stored as arrays containing 16-bit integers. Thus, the output MUST contain 
 an array with two 16-bit integers: [x,y]\(final position\) or [-1,-1]. The simulation commands from the second user input MUST be stored as 8-bit
-integers. No String-types SHALL NOT be used during parsing of any user input. For future use there SHOULD be a function which
-changes the 'endian' of the integers e.g. convert little endian to big endian.   
+integers. String-types SHALL NOT be used during parsing of any user input. For future use there SHOULD be a function which
+changes the 'endian' of the integers e.g. convert big endian to little endian.   
 
 ## Commands
 The object always has a direction (north, east, south or west). A simulation always starts with direction north. 
@@ -27,9 +27,8 @@ Use comma as separator between commands.
 
 ## Example
 If the program gets 4,4,2,2 as input, the table is initiated to size 4 x 4 with the object in position [2, 2] with direction 
-north. Then, commands 1,4,1,3,2,3,2,4,1,0 are read from stdin and executed. The final output would then be the end position 
+north. Then, e.g. commands 1,4,1,3,2,3,2,4,1,0 are read from stdin and executed. The final output would then be the end position 
 of the object, in this case [0, 1].
-
 
 ## Things to keep in mind
 It is always possible to solve the task without any real structure, but the point here is to use a well known object oriented 
@@ -37,5 +36,5 @@ and/or functional architecture. A good code structure should also allow for expa
 would it be easy to:
 - Handle a different shapes other than a rectangle - Add more commands
 - Change the binary form of the protocol to JSON Timing
-Estimated time to complete this task is around 8 hours.
+- Estimated time to complete this task is around 8 hours.
 

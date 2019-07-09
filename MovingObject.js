@@ -1,12 +1,12 @@
 /**
-* MovingObject.js
-*
-* This class symbolises an object in motion. It contains its position and direction. It also handles the function for
-* movement and rotation. But the Matrix class checks whether the object is inside the matrix.
-*
-*
-* @author: Björn Boris Berggren
-*
+ * MovingObject.js
+ *
+ * This class symbolises an object in motion. It contains its position and direction. It also handles the function for
+ * movement and rotation. But the Matrix class checks whether the object is inside the matrix.
+ *
+ *
+ * @author: Björn Boris Berggren
+ *
  */
 class MovingObject {
 
@@ -29,10 +29,6 @@ class MovingObject {
         this._position = position;
     }
 
-    /**
-     * The position of this object [x,y]
-     * @type {Int16Array}
-     */
     get position() {
         return this._position;
     }
@@ -45,19 +41,16 @@ class MovingObject {
         this._direction = direction;
     }
 
-    /**
-     * The direction of this object
-     * @type {number}
-     */
     get direction() {
         return this._direction;
     }
 
     /**
      * Rotates this object
-     * @param{number}
-     * @param{object}
-     * @param{object}
+     *
+     * @param {number} command The command for the rotation, it is either clockwise (3) or counterclockwise (4)
+     * @param {object} predefinedCommands This object contains all the defined commands
+     * @param {object} directions this object contains all the defined directions
      */
     rotate(command, predefinedCommands, directions) {
         if (command === predefinedCommands.ROTATE) {
@@ -76,9 +69,10 @@ class MovingObject {
 
     /**
      * Moves this object
-     * @param{number}
-     * @param{object}
-     * @param{object}
+     *
+     * @param {number} command The command for the movement, it is either forward (1) or backward (2)
+     * @param {object} predefinedCommands This object contains all the defined commands
+     * @param {object} directions this object contains all the defined directions
      */
     move(command, predefinedCommands, directions) {
 

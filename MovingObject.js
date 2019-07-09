@@ -1,5 +1,5 @@
 /**
-* movingObject.js
+* MovingObject.js
 *
 * This class symbolises an object in motion. It contains its position and direction. It also handles the function for
 * movement and rotation. But the Matrix class checks whether the object is inside the matrix.
@@ -60,10 +60,6 @@ class MovingObject {
      * @param{object}
      */
     rotate(command, predefinedCommands, directions) {
-        console.log(typeof command);
-        console.log(typeof predefinedCommands);
-        console.log(typeof directions);
-
         if (command === predefinedCommands.ROTATE) {
             this._direction++;
             if (this._direction > directions.WEST) {

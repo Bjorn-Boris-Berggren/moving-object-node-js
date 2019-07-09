@@ -4,16 +4,17 @@
  * This is the main file and the first file to run. It is a state machine which uses classes MovingObject and
  * Matrix to simulate an object in motion on a rectangular field.
  *
- * @author: Björn Boris Berggren
+ *@author: Björn Boris Berggren
  */
 
-const MovingObject = require('./movingobject.js');
-const Matrix = require('./matrix.js');
-let rebuilt = '';
+    //let rebuilt
+let Matrix = require('./Matrix.js');
+let MovingObject = require('./MovingObject.js');
 
 
 // Object which checks the boundaries and size of the field
 let theMatrix = new Matrix();
+
 // Contains size of the matrix [x,y]
 theMatrix.size = new Int16Array(2);
 
@@ -21,7 +22,6 @@ theMatrix.size = new Int16Array(2);
 let theMovingObject = new MovingObject();
 // Will contain the position [x,y]
 theMovingObject.position = new Int16Array(2);
-
 
 // The overall states for the app
 const states = {
@@ -34,7 +34,6 @@ let currentState = states.STATE1;
 
 // Messages to the user
 const messages = {
-
     MSG_SIZEPOS: 'Type the size of the matrix and the position of the object: width,height,x,y',
     MSG_COMMANDS: 'Type simulation commands, use comma to separate the commands e.g. \'1,3,1,1,0\':\n' +
         '0 = quit simulation and the print result\n' +
@@ -44,7 +43,6 @@ const messages = {
         '4 = rotate counterclockwise 90 degrees (eg west to south)',
     MSG_PRESSKEY: 'Press any key and enter to continue..',
     MSG_ERROR: 'Incorrect character or incorrect amount of characters, please try again'
-
 };
 
 // All the defined directions
@@ -127,10 +125,6 @@ process.stdin.on('data', function (inputUTF8Codes) {
     }
 });
 
-
-process.stdin.on('end', function () {
-    console.log(rebuilt);
-});
 
 /**
  * Reads and stores the input and size from user, state1
@@ -328,7 +322,8 @@ function convertEndian(nbrChangeEndian) {
     nbrChangeEndian = nbrChangeEndian >> 8;
     nbrChangeEndian = nbrChangeEndian | temp;
 
-    //return theInt.toString(16);
+
     return nbrChangeEndian;
 
 }
+

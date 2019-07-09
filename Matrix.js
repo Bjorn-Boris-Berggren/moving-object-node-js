@@ -1,5 +1,5 @@
 /**
-*matrix.js
+* Matrix.js
 *
 * This class symbolises the area where the object is moving, the major purpose with this is to store the boundaries,
 * and make sure that boundaries are not passed. In the future it can be possible to create different fields that are not rectangular
@@ -50,7 +50,7 @@ class Matrix {
     /**
      * Checks whether the object is outside the matrix
      * @param {Int16Array} position contains the new position after a move [x,y]
-     * @returns {boolean} True if object is outside this matrix
+     * @returns {boolean} True if the object is outside this matrix
      * */
     checkIfObjectIsOutside(position) {
 
@@ -63,7 +63,7 @@ class Matrix {
 
         return false;
 
-    };
+    }
 
 }
 

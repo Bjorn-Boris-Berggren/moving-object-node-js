@@ -1,5 +1,5 @@
 # moving-object-node-js
-This task was given to me. It is a Node.js console app that simulates a moving object in a matrix. 
+This task was given to me. It is a simple Node.js console app that simulates a moving object in a matrix. 
 
 ## The Task
 The task is to accept a set of commands and then simulate whether an object can move according to these commands without 

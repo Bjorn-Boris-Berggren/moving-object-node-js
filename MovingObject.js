@@ -8,6 +8,7 @@
  * @author: Björn Boris Berggren
  *
  */
+
 class MovingObject {
 
   /**

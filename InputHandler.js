@@ -7,6 +7,7 @@
  * @author: Björn Boris Berggren
  *
  */
+
 class InputHandler {
 
 

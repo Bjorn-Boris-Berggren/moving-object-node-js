@@ -15,6 +15,7 @@ class Matrix {
    * Creates a new Matrix.
    * @class
    */
+
   constructor() {
   }
 
@@ -22,6 +23,7 @@ class Matrix {
    *  The size of this object [width,height]
    * @type {Int16Array}
    */
+
   set size(size) {
     this._size = size;
   }
@@ -34,6 +36,7 @@ class Matrix {
    * For future use, this will contain a two dimensional boolean-matrix which will occupy positions where you are not allowed to go
    * @type {Array}
    */
+
   set matrix(matrix) {
     this._matrix = matrix;
   }
@@ -47,6 +50,7 @@ class Matrix {
    * @param {Int16Array} position Contains the new position after a move [x,y]
    * @returns {boolean} True if the object is outside this matrix
    * */
+
   checkIfObjectIsOutside(position) {
 
     if (position[0] < 0 || position[0] > (this._size[0] - 1)) {

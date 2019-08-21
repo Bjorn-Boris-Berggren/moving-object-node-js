@@ -15,10 +15,12 @@ class MovingObject {
    * Creates a new MovingObject.
    * @class
    */
+
   constructor() {
     /*
      *   Default MUST be 1
      */
+
     this._direction = 1;
   }
 
@@ -27,6 +29,7 @@ class MovingObject {
    *  The position of this object [x,y]
    * @type {Int16Array}
    */
+
   set position(position) {
     this._position = position;
   }
@@ -39,6 +42,7 @@ class MovingObject {
    * The direction of this object
    * @type {number}
    */
+
   set direction(direction) {
     this._direction = direction;
   }
@@ -52,7 +56,6 @@ class MovingObject {
    *
    * @param {number} command The command for the rotation, it is either clockwise (3) or counterclockwise (4)
    * @param {object} predefinedCommands This object contains all the defined commands
-   * @param {object} directions this object contains all the defined directions
    */
 
   rotate(command, predefinedCommands) {
@@ -75,7 +78,6 @@ class MovingObject {
    *
    * @param {number} command The command for the movement, it is either forward (1) or backward (2)
    * @param {object} predefinedCommands This object contains all the defined commands
-   * @param {object} directions this object contains all the defined directions
    */
 
   move(command, predefinedCommands) {

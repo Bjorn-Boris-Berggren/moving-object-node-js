@@ -8,7 +8,6 @@
  * @author: Björn Boris Berggren
  */
 
-  //let rebuilt
 let Matrix = require('./Matrix.js');
 let MovingObject = require('./MovingObject.js');
 let InputHandler = require('./InputHandler.js');
@@ -17,12 +16,14 @@ let InputHandler = require('./InputHandler.js');
  * Handles all the user input. It formats and validates the input. All user input MUST pass this object before usage.
  * @type {InputHandler}
  */
+
 let inputHandler = new InputHandler();
 
 /**
  * The Matrix-object mainly used to store the size and to check the boundaries
  * @type {Matrix}
  */
+
 let matrix = new Matrix();
 
 // Contains size of the matrix [x,y]
@@ -42,6 +43,7 @@ movingObject.position = new Int16Array(2);
  *
  * @type {Object}
  */
+
 const STATES = {
   STORE_SIZE_POSITION: 1,
   RUN_SIMULATION: 2,
@@ -52,6 +54,7 @@ const STATES = {
  * The current state of the state machine
  * @type {number}
  */
+
 let state = STATES.STORE_SIZE_POSITION;
 
 /**
@@ -155,37 +158,34 @@ process.stdin.on('data', function (inputUTF8Codes) {
 
 function storeSizePosition(userInputDigits) {
 
-  let userInput16 = new Int16Array(1);
-  let theArrayBuffer = new ArrayBuffer(16);
+  let userInput16BitDigit = new Int16Array(1);
+  let arrayBuffer = new ArrayBuffer(16);
   let slotsPerInt = 2;
   // All values are stored here, 2 slots per int
-  let theDataView = new DataView(theArrayBuffer);
-
-  let bool = false;
+  let parsedUserInput = new DataView(arrayBuffer);
 
   let currentValue = 0;
-  let userInt16Index = 0;
-  let exp = 0;
+  let exponent = 0;
 
   for (let i = 0; i < userInputDigits.length; i++) {
 
     if (userInputDigits[i] !== -1) {
-      userInput16[0] += (userInputDigits[i] * Math.pow(10, exp));
-      exp++;
+      userInput16BitDigit[0] += (userInputDigits[i] * Math.pow(10, exponent));
+      exponent++;
     } else {
-      theDataView.setInt16(currentValue, userInput16[0], true);
-      userInput16[0] = 0;
+      parsedUserInput.setInt16(currentValue, userInput16BitDigit[0], true);
+      userInput16BitDigit[0] = 0;
       currentValue += slotsPerInt;
-      exp = 0;
+      exponent = 0;
     }
 
 
   }
 
-  movingObject.position[0] = theDataView.getInt16(2, true);
-  movingObject.position[1] = theDataView.getInt16(0, true);
-  matrix.size[0] = theDataView.getInt16(6, true);
-  matrix.size[1] = theDataView.getInt16(4, true);
+  movingObject.position[0] = parsedUserInput.getInt16(2, true);
+  movingObject.position[1] = parsedUserInput.getInt16(0, true);
+  matrix.size[0] = parsedUserInput.getInt16(6, true);
+  matrix.size[1] = parsedUserInput.getInt16(4, true);
 }
 
 /*
@@ -234,7 +234,7 @@ function runSimulation(selectedCommands) {
  */
 
 function convertEndian(nbrChangeEndian) {
-  let temp = 0;
+  let temp;
   temp = nbrChangeEndian << 8;
   temp = temp & 0xFFFF;
   nbrChangeEndian = nbrChangeEndian >> 8;
